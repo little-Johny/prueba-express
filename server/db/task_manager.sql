@@ -1,0 +1,41 @@
+START TRANSACTION;
+DROP DATABASE IF EXISTS task_manager;
+
+CREATE DATABASE task_manager;
+
+USE task_manager;
+
+CREATE TABLE user (
+  id INT NOT NULL AUTO_INCREMENT,
+  username VARCHAR(50) UNIQUE NOT NULL,
+  email VARCHAR(50) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE task (
+  id INT NOT NULL AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  title VARCHAR(100) NOT NULL,
+  description LONGTEXT NOT NULL,
+  due_date DATE,
+  priority ENUM('high', 'medium', 'low') NOT NULL DEFAULT 'low',
+  completed BOOLEAN DEFAULT false,
+  create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE user
+ADD PRIMARY KEY (id);
+
+ALTER TABLE task
+ADD PRIMARY KEY (id);
+
+ALTER TABLE task 
+ADD CONSTRAINT fk_user_task
+FOREIGN KEY (user_id)
+REFERENCES user(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+;
+
+COMMIT;
